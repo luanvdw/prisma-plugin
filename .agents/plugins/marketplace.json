@@ -8,7 +8,7 @@
       "name": "prisma",
       "source": {
         "source": "local",
-        "path": "./"
+        "path": "./plugins/prisma"
       },
       "policy": {
         "installation": "AVAILABLE",
