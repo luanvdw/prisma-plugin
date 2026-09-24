@@ -1,14 +1,14 @@
 {
-  "name": "prisma",
+  "name": "prisma-preview",
   "interface": {
-    "displayName": "Prisma"
+    "displayName": "Prisma Local Preview"
   },
   "plugins": [
     {
       "name": "prisma",
       "source": {
         "source": "local",
-        "path": "./"
+        "path": "./prisma"
       },
       "policy": {
         "installation": "AVAILABLE",

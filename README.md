@@ -29,21 +29,28 @@ packager uses Node's standard library; there is no dependency-install step in th
 repository. It checks the pinned archive's integrity and never runs npm lifecycle
 scripts or installs Composer into this repository.
 
-From this repository's root:
+From this repository's root, build and check the bundle:
 
 ```bash
 node scripts/package-plugin.mjs
 node scripts/package-plugin.mjs --check
-codex plugin marketplace add "$PWD"
-codex plugin add prisma@prisma
-codex plugin list --marketplace prisma --json
 ```
 
-This registers the local `prisma` marketplace and installs its Prisma plugin into
+After the onboarding release gate above is cleared, install the preview explicitly:
+
+```bash
+codex plugin marketplace add "$PWD/plugins"
+codex plugin add prisma@prisma-preview
+codex plugin list --marketplace prisma-preview --json
+```
+
+This registers the local `prisma-preview` marketplace and installs its Prisma plugin into
 Codex's cache. Open a **new Codex task in an empty app folder** after installation
 so the new skill is available. Select the Prisma plugin if needed; confirm that
 both `prisma:prisma-build-and-deploy` and `prisma:prisma-composer-core-concepts`
-are available (Codex prefixes skills with their plugin name).
+are available (Codex prefixes skills with their plugin name). Enable only the
+focused Prisma preview for acceptance testing, so another Prisma installation
+does not supply additional skills.
 
 ### First test
 
@@ -94,17 +101,18 @@ scenarios, recorded evidence, and remaining limits of this preview.
 | `plugins/prisma/plugin.json` | Portable identity, display metadata, and starter prompts |
 | `plugins/prisma/skills/prisma-build-and-deploy/` | Authored workflow and its version-specific toolchain reference |
 | `scripts/package-plugin.mjs` | Refreshes only imported content, preserves the authored skill, and verifies the full bundle |
-| `.agents/plugins/marketplace.json` | Points the local Codex marketplace at `./plugins/prisma` |
+| `plugins/.agents/plugins/marketplace.json` | Opt-in local preview marketplace, pointing at `./prisma` relative to `plugins/` |
+| `.agents/plugins/marketplace.json` | Preserves the existing root plugin for default repository installs |
 | `.gitignore` | Excludes generated bundle content from this initial local preview |
 
 The plugin's `skills/` directory is discovered automatically. There is no MCP
 server in this focused bundle. The older root skills and tool manifests below
-remain available in the repository, but this local marketplace installs only the
-Composer bundle.
+remain the default repository install. The separate `prisma-preview` marketplace
+installs only the Composer bundle after packaging.
 
 To iterate, edit the maintained files, bump `version` in
 `plugins/prisma/plugin.json`, rerun the packager and `--check`, then run
-`codex plugin add prisma@prisma` again and start a new task. Codex uses its
+`codex plugin add prisma@prisma-preview` again and start a new task. Codex uses its
 installed copy, so edits to this checkout alone do not update active tasks.
 `--check` is offline and detects missing, changed, or additional bundle files.
 To update Composer, review the new upstream skill and change the package version,

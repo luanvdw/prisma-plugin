@@ -62,7 +62,7 @@ test('packaging preserves authored files and verifies the complete bundle', asyn
     pass(run('--check'));
 
     // The tracked workflow must not be accidentally covered by a generated-content ignore.
-    const ignored = spawnSync('git', ['check-ignore', `${workflow}/SKILL.md`], { cwd: root });
+    const ignored = spawnSync('git', ['check-ignore', '--no-index', `${workflow}/SKILL.md`], { cwd: root });
     assert.equal(ignored.status, 1);
   } finally {
     await rm(temporary, { recursive: true, force: true });

@@ -7,6 +7,24 @@ The published `prisma@8.0.0-rc.15` pin is retained as the previous verified base
 not represented as supporting the new option. Application/deployment results below
 remain the `0.4.0-dev.2` baseline. Agent-reported evidence is labeled separately.
 
+## Local PR review (2026-09-24)
+
+Review of PR #7 found and resolved two issues before merging the preview source:
+
+- The default repository marketplace pointed at an incomplete, release-gated
+  bundle. It now remains byte-for-byte identical to main's existing root-plugin
+  route. The opt-in `prisma-preview` marketplace lives under `plugins/`; its
+  documented installation step is conditional on the onboarding release gate.
+- The ignore-rule regression assertion skipped tracked files. It now uses
+  `git check-ignore --no-index`; an isolated tracked-file fixture reproduced the
+  original false negative and confirmed the corrected command detects it.
+
+The packaging regression test, skill-format validator, bundle integrity check,
+marketplace target/asset/skill checks, and diff whitespace check passed. Composer's
+imported reference is unchanged. No installed plugin, personal credentials, or
+cloud resources were changed. This repository currently has no GitHub CI checks;
+these are locally executed results, not hosted CI or fresh-user acceptance.
+
 ## Desktop onboarding revision (`0.4.0-dev.4`)
 
 The authored workflow now requires desktop-local execution, agent-managed setup,
